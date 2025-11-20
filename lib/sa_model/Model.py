@@ -81,8 +81,8 @@ class Model:
     
 
 
-# test = Model()
-# results = test.predict(["Avoid this movie at all costs, everything about it is bad", "I love it", "It's a great movie !"])
+test = Model()
+results = test.predict(["Avoid this movie at all costs, everything about it is bad", "I love it", "It's a great movie !"])
 
-# for result in results:
-#     print(result)
+for result in results:
+    print(result)
