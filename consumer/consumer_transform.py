@@ -42,7 +42,7 @@ def consumer_transform():
             # print(type(consumer))
             for comment in consumer:
                 print(f'Actual topic : {topic}')
-                comments.append(comment)
+                comments.append(comment.value)
                 # appliquer la fonction de prédiction au comment
                 #   label = predict_label(comment)
                 #    print(f"Predition : {label}")
