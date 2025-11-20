@@ -20,10 +20,16 @@ LIMIT_POSTS = 50
 
 # On définit la variable contennat le nom des films : MOVIES
 
-MOVIES = [
-    "TheCrown",
-    "QueensGambit",
-    "BreakingBad",
+MOVIES = ['adolescence',
+                    'breaking bad',
+                    'the crown',
+                    'the 100',
+                    'oppenheimer',
+                    'wednesday',
+                    'peaky blinders',
+                    'stranger things',
+                    'supernatural',
+                    'euphoria'
 ]
 
 # Dictionnaire global pour stocker les files d'attente des posts pour chaque film

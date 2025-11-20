@@ -26,7 +26,6 @@ def consumer_transform():
                     'peaky_blinders',
                     'stranger_things',
                     'supernatural',
-                    'topic_brut',
                     'you',
                 ]
     
