@@ -10,3 +10,7 @@
 - pip install sqlalchemy psycopg2-binary
 - create a database inside postgre
 - fill your postgre connection infos in you .env file
+
+## Model configuration
+
+- add the absolute path of both the pickles inside the "feathers" directory to your .env
