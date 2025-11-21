@@ -5,9 +5,6 @@ import time
 import os
 import sys
 
-# --- Loading of model and verctorizer ---
-model_path = "/home/kristen/Rendu/DATA/ML_Pool/C-DAT-300-COT-2-1-endtoendml-5/data/models/model.pkl"
-vectorize_path="/home/kristen/Rendu/DATA/ML_Pool/C-DAT-300-COT-2-1-endtoendml-5/data/models/vectorized.pkl"
 OUTPUT_FILE = "commentaires_labellises.json" # file that the second consumer will use
 
 
@@ -24,22 +21,16 @@ def load_utilities(path):
         print(f"Loading error: {e}")
         sys.exit(1)
         
-model = load_utilities(model_path)
-vectorizer = load_utilities(vectorize_path)
 
 
-
-# --- Fonctions de Traitement ---
-
-def predict_label(comment_text):
+def predict_label(model, comment_text):
     """ 
         Returns the prediction of the sentiment conveyed by the comment
     """
     if not comment_text: return "NO_TEXT"
     try:
         # vectorize a text before prediction
-        vector=vectorizer.transform([comment_text])
-        prediction = model.predict(vector) 
+        prediction = model.predict([comment_text]) 
         return prediction[0]  # return label predict
     except Exception as e:
         print(f"Prediction error: {e}")
@@ -60,7 +51,7 @@ def append_to_json_file(record, filename=OUTPUT_FILE):
         
         
 
-def consumer_realtime_to_file():
+def consumer_realtime_to_file(model):
     list_of_topics = ['adolescence',
                     'breaking_bad',
                     'the_crown',
@@ -93,7 +84,7 @@ def consumer_realtime_to_file():
             timestamp = int(time.time())
 
             if text_to_process:
-                label = str(predict_label(text_to_process))
+                label = str(predict_label(model, text_to_process))
                 
                 labeled_record = {
                     "original_topic": message.topic,
@@ -102,6 +93,8 @@ def consumer_realtime_to_file():
                     "label": label
                 }
                 
+                append_to_json_file(labeled_record)
+                
                 label_send = {
                     "original_topic": message.topic,
                     "comment": text_to_process,
@@ -109,7 +102,6 @@ def consumer_realtime_to_file():
                     "label": int(label)
                 }
                 
-                append_to_json_file(labeled_record)
                 
                 print(f"Labellisé et écrit: Topic='{message.topic}', comment={text_to_process}, Label='{label}'")
 
@@ -118,6 +110,3 @@ def consumer_realtime_to_file():
         print("Stopped by the user.")
     finally:
         consumer.close()
-
-if __name__ == "__main__":
-    consumer_realtime_to_file()
