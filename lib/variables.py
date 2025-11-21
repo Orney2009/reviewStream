@@ -21,3 +21,6 @@ pg_database = os.getenv("PG_DATABASE")
 # pickles file path
 model_file_path = os.getenv("MODEL_PICKLE_FILE_PATH")
 vector_file_path = os.getenv("VECTOR_PICKLE_FILE_PATH")
+
+# stopwords file path
+stopwords_file_path = os.getenv("STOPWORDS_FILE_PATH")
