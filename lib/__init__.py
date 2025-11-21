@@ -1,0 +1,6 @@
+"""
+This package exports all necessary variables and functions used during the development of this project
+"""
+
+from .variables import imdb_file_path, pg_database, pg_dialect_and_driver, pg_host, pg_password, pg_port, pg_username, model_file_path, vector_file_path, stopwords_file_path, topic_name
+from .sa_model import Model
