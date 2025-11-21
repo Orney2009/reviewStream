@@ -37,7 +37,7 @@ class Model:
             self.vector = pickle.load(vecfile)
 
         except Exception as e:
-            print(f"Error during instanciation of sentiment analysis model: {e}")
+            print(f"\nError during instanciation of sentiment analysis model: {e}\n")
 
     def getModel(self):
         """
@@ -72,7 +72,7 @@ class Model:
             return predictions
 
         except Exception as e:
-            print(f"Error during of sentiment analysis model prediction function: {e}")
+            print(f"\nError during of sentiment analysis model prediction function: {e}\n")
             return []
 
 
@@ -87,7 +87,7 @@ class Model:
             new_dataset["Reviews"] = new_dataset.Reviews.map(lambda x: word_tokenize(x.lower() if isinstance(x, str) else str(x) ))
             return new_dataset
         except Exception as e:
-            print(f"Error during tokenization: {e}")
+            print(f"\nError during tokenization: {e}\n")
             return pd.DataFrame([])
 
     def stopwords_remover(self, dataset):
@@ -108,7 +108,7 @@ class Model:
             dataset["Reviews"] = dataset.Reviews.map(lambda x: [word for word in x if (word not in stop_words and re.match(regex, word))])
             return dataset
         except Exception as e:
-            print(f"Error during stopword removal: {e}")
+            print(f"\nError during stopword removal: {e}\n")
             return pd.DataFrame([])
 
     def punctuation_remover(self, dataset):
@@ -122,7 +122,7 @@ class Model:
             dataset["Reviews"] = dataset.Reviews.map(lambda x: [word for word in x if word not in punctuation])
             return dataset
         except Exception as e:
-            print(f"Error during punctuation removal: {e}")
+            print(f"\nError during punctuation removal: {e}\n")
             return pd.DataFrame([])
 
     def pos_tagger(self, dataset):
@@ -136,7 +136,7 @@ class Model:
             dataset["Reviews"] = dataset.Reviews.map(lambda x: [tagged for tagged in pos_tag(x,tagset='universal') if tagged[1] not in ["NUM"] ])
             return dataset
         except Exception as e:
-            print(f"Error postag attribution: {e}")
+            print(f"\nError postag attribution: {e}\n")
             return pd.DataFrame([])
 
     def lemmatizer(self, dataset):
@@ -150,7 +150,7 @@ class Model:
             dataset["Reviews"] = dataset.Reviews.map(lambda row: [ lem.lemmatize(word[0], pos = self.get_pos_tag(word[1])) for word in row ])
             return dataset
         except Exception as e:
-            print(f"Error during lemmatization: {e}")
+            print(f"\nError during lemmatization: {e}\n")
             return pd.DataFrame([])
 
     def get_pos_tag(self, pos):  
@@ -174,5 +174,5 @@ class Model:
                     result = "s"
             return result
         except Exception as e:
-            print(f"Error during convertion of postag to WordNetLemmatizer() format: {e}")
+            print(f"\nError during convertion of postag to WordNetLemmatizer() format: {e}\n")
             return ""

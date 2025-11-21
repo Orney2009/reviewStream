@@ -3,3 +3,4 @@ __pycache__
 imdb.csv
 .venv
 sklearn-env
+.idea
