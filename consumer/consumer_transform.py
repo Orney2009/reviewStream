@@ -60,8 +60,8 @@ def send_comments_label(new_topic, content) :
     producer.send (new_topic, content)
     print(f"All of comment send: {content}")
 
-    producer.flush()
-    print("All comments send \n")   
+    # producer.flush()
+    # print("All comments send \n")   
 
       
 
@@ -121,10 +121,11 @@ def consumer_realtime_to_file(model):
                 all_comments.append(label_send)
                 
                 print(f"\nLabellisé et écrit: Topic='{message.topic}', comment={text_to_process}, Label='{label}' \n")
+                send_comments_label('new_label_topic', label_send)
+
                 
-                for comment in all_comments:
-                    send_comments_label('new_label_topic', comment)
-                    print('new label send')
+        # for comment in all_comments:
+        #     print('new label send')
                     
     except KeyboardInterrupt:
         print("Stopped by the user.")

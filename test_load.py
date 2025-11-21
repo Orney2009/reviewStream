@@ -22,7 +22,10 @@ print(results)
 # for result in results:
 #     print(result)
 
-consumer_realtime_to_file(test)
+# print(consumer_loader_data(topic_name))
+
+
+consumer_loader_data(topic_name)
 
 
 
