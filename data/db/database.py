@@ -137,3 +137,11 @@ class db:
 
         except Exception as e:
             print(f"Error in load_to_db function: {e}")
+
+    def get_reviews(self):
+        reviews = session.query(Reviews).all()
+        return reviews
+    
+    def get_shows(self):
+        shows = session.query(Shows).all()
+        return shows
