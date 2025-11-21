@@ -19,7 +19,7 @@ nltk.download("universal_tagset")
 import re
 import string
 
-from lib import model_file_path, vector_file_path
+from lib import model_file_path, vector_file_path, stopwords_file_path
 
 
 class Model:
@@ -29,10 +29,15 @@ class Model:
         retrieve and store model and vector trought pickle
         """
 
-        pkfile = open(model_file_path, 'rb')
-        vecfile = open(vector_file_path, 'rb')
-        self.model = pickle.load(pkfile)
-        self.vector = pickle.load(vecfile)
+        try:
+
+            pkfile = open(model_file_path, 'rb')
+            vecfile = open(vector_file_path, 'rb')
+            self.model = pickle.load(pkfile)
+            self.vector = pickle.load(vecfile)
+
+        except Exception as e:
+            print(f"Error during instanciation of sentiment analysis model: {e}")
 
     def getModel(self):
         """
@@ -46,23 +51,30 @@ class Model:
         must get a list of string as parameter
         """
 
-        data = pd.DataFrame(reviews, columns=['Reviews'])
-        tokenized = self.tokenizer(data)
+        try:
 
-        without_stopwords = self.stopwords_remover(tokenized)    
-        without_punctuation = self.punctuation_remover(without_stopwords)    
-        tagged_words = self.pos_tagger(without_punctuation)
-        lemmatized_words = self.lemmatizer(tagged_words)
+            data = pd.DataFrame(reviews, columns=['Reviews'])
+            tokenized = self.tokenizer(data)
 
-        # transform the comments column into a list. each of its element is a list of words
-        list_of_rows = lemmatized_words.Reviews.tolist()
-        text = [" ".join(str(elm) for elm in doc) for doc in list_of_rows] # concat the el of each inner list into a string  
+            without_stopwords = self.stopwords_remover(tokenized)    
+            without_punctuation = self.punctuation_remover(without_stopwords)    
+            tagged_words = self.pos_tagger(without_punctuation)
+            lemmatized_words = self.lemmatizer(tagged_words)
 
-        # encode the string into a vector based on existing vocabulary
-        vectorized = self.vector.transform(text)        
-        predictions = self.model.predict(vectorized.toarray())
+            # transform the comments column into a list. each of its element is a list of words
+            list_of_rows = lemmatized_words.Reviews.tolist()
+            text = [" ".join(str(elm) for elm in doc) for doc in list_of_rows] # concat the el of each inner list into a string  
 
-        return predictions
+            # encode the string into a vector based on existing vocabulary
+            vectorized = self.vector.transform(text)        
+            predictions = self.model.predict(vectorized.toarray())
+
+            return predictions
+
+        except Exception as e:
+            print(f"Error during of sentiment analysis model prediction function: {e}")
+            return []
+
 
 
     def tokenizer(self, dataset):
@@ -70,9 +82,13 @@ class Model:
         tokenise dataframe data and return the new dataframe
         must get a dataframe as parameter
         """
-        new_dataset = dataset.copy(deep=True)
-        new_dataset["Reviews"] = new_dataset.Reviews.map(lambda x: word_tokenize(x.lower() if isinstance(x, str) else str(x) ))
-        return new_dataset
+        try:
+            new_dataset = dataset.copy(deep=True)
+            new_dataset["Reviews"] = new_dataset.Reviews.map(lambda x: word_tokenize(x.lower() if isinstance(x, str) else str(x) ))
+            return new_dataset
+        except Exception as e:
+            print(f"Error during tokenization: {e}")
+            return pd.DataFrame([])
 
     def stopwords_remover(self, dataset):
         """
@@ -80,24 +96,34 @@ class Model:
         must get a dataframe as parameter
         """
 
-        with open("data/stopwords.txt") as file:
-            custom_stopwords = file.read().split(",")
-            
-        stop_words = set(stopwords.words('english') + custom_stopwords + ["footnote", "sidenote", "project", "gutenberg"])
+        try:
 
-        regex = r"^\w+$"
+            with open(stopwords_file_path) as file:
+                custom_stopwords = file.read().split(",")
+                
+            stop_words = set(stopwords.words('english') + custom_stopwords + ["footnote", "sidenote", "project", "gutenberg"])
 
-        dataset["Reviews"] = dataset.Reviews.map(lambda x: [word for word in x if (word not in stop_words and re.match(regex, word))])
-        return dataset
+            regex = r"^\w+$"
+
+            dataset["Reviews"] = dataset.Reviews.map(lambda x: [word for word in x if (word not in stop_words and re.match(regex, word))])
+            return dataset
+        except Exception as e:
+            print(f"Error during stopword removal: {e}")
+            return pd.DataFrame([])
 
     def punctuation_remover(self, dataset):
         """
         Remove punctuations from dataframe data and return the new dataframe
         must get a dataframe as parameter
         """
-        punctuation = string.punctuation + "``" + "''" + "--" + "_" + "(" + ")" + '""' + "|" + "“" + "”" + "’" + "‘" + "___"
-        dataset["Reviews"] = dataset.Reviews.map(lambda x: [word for word in x if word not in punctuation])
-        return dataset
+        try:
+
+            punctuation = string.punctuation + "``" + "''" + "--" + "_" + "(" + ")" + '""' + "|" + "“" + "”" + "’" + "‘" + "___"
+            dataset["Reviews"] = dataset.Reviews.map(lambda x: [word for word in x if word not in punctuation])
+            return dataset
+        except Exception as e:
+            print(f"Error during punctuation removal: {e}")
+            return pd.DataFrame([])
 
     def pos_tagger(self, dataset):
         """
@@ -105,18 +131,27 @@ class Model:
         must get a dataframe as parameter
         """
 
-        dataset["Reviews"] = dataset.Reviews.map(lambda x: [tagged for tagged in pos_tag(x,tagset='universal') if tagged[1] not in ["NUM"] ])
-        return dataset
+        try:
+
+            dataset["Reviews"] = dataset.Reviews.map(lambda x: [tagged for tagged in pos_tag(x,tagset='universal') if tagged[1] not in ["NUM"] ])
+            return dataset
+        except Exception as e:
+            print(f"Error postag attribution: {e}")
+            return pd.DataFrame([])
 
     def lemmatizer(self, dataset):
         """
         Transform each data from dataframe in its base form and return the new dataframe. It does not store duplicate data
         must get a dataframe as parameter
         """
+        try:
 
-        lem = WordNetLemmatizer()
-        dataset["Reviews"] = dataset.Reviews.map(lambda row: [ lem.lemmatize(word[0], pos = self.get_pos_tag(word[1])) for word in row ])
-        return dataset    
+            lem = WordNetLemmatizer()
+            dataset["Reviews"] = dataset.Reviews.map(lambda row: [ lem.lemmatize(word[0], pos = self.get_pos_tag(word[1])) for word in row ])
+            return dataset
+        except Exception as e:
+            print(f"Error during lemmatization: {e}")
+            return pd.DataFrame([])
 
     def get_pos_tag(self, pos):  
         """
@@ -124,15 +159,20 @@ class Model:
         must get a string as parameter
         """
 
-        match pos:
-            case "NOUN":
-                result = "n"
-            case "VERB":
-                result = "v"
-            case "ADJ":
-                result = "a"
-            case "ADV":
-                result = "r"
-            case _:
-                result = "s"
-        return result
+        try:
+
+            match pos:
+                case "NOUN":
+                    result = "n"
+                case "VERB":
+                    result = "v"
+                case "ADJ":
+                    result = "a"
+                case "ADV":
+                    result = "r"
+                case _:
+                    result = "s"
+            return result
+        except Exception as e:
+            print(f"Error during convertion of postag to WordNetLemmatizer() format: {e}")
+            return ""
