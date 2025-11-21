@@ -108,7 +108,7 @@ def consumer_realtime_to_file(model):
                     "label": label
                 }
                 
-                append_to_json_file(labeled_record)
+                # append_to_json_file(labeled_record)
                 
                 label_send = {
                     "original_topic": message.topic,
