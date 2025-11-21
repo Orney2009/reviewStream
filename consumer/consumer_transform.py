@@ -1,4 +1,5 @@
 from kafka import KafkaConsumer
+from kafka import KafkaProducer
 import pickle
 import json
 import time
@@ -49,7 +50,20 @@ def append_to_json_file(record, filename=OUTPUT_FILE):
     except IOError as e:
         print(f"Error writing to file {filename}: {e}")
         
-        
+
+def send_comments_label(new_topic, content) :
+    producer= KafkaProducer(
+        bootstrap_servers='localhost:9092',
+        value_serializer=lambda v: json.dumps(v).encode("utf-8")
+    )
+    
+    producer.send (new_topic, content)
+    print(f"All of comment send: {content}")
+
+    producer.flush()
+    print("All comments send \n")   
+
+      
 
 def consumer_realtime_to_file(model):
     list_of_topics = ['adolescence',
@@ -63,6 +77,8 @@ def consumer_realtime_to_file(model):
                     'supernatural',
                     'euphoria'
                 ]
+    
+    all_comments=[]
 
     
     consumer = KafkaConsumer(
@@ -102,10 +118,14 @@ def consumer_realtime_to_file(model):
                     "label": int(label)
                 }
                 
+                all_comments.append(label_send)
                 
-                print(f"Labellisé et écrit: Topic='{message.topic}', comment={text_to_process}, Label='{label}'")
-
-                return label_send
+                print(f"\nLabellisé et écrit: Topic='{message.topic}', comment={text_to_process}, Label='{label}' \n")
+                
+                for comment in all_comments:
+                    send_comments_label('new_label_topic', comment)
+                    print('new label send')
+                    
     except KeyboardInterrupt:
         print("Stopped by the user.")
     finally:
