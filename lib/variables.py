@@ -17,3 +17,7 @@ pg_password = os.getenv("PG_PASSWORD")
 pg_host = os.getenv("PG_HOST")
 pg_port = os.getenv("PG_PORT")
 pg_database = os.getenv("PG_DATABASE")
+
+# pickles file path
+model_file_path = os.getenv("MODEL_PICKLE_FILE_PATH")
+vector_file_path = os.getenv("VECTOR_PICKLE_FILE_PATH")
