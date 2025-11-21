@@ -25,7 +25,7 @@ producer = KafkaProducer(
 
 dernier_posts = {movie: set() for movie in MOVIES}
 
-def main():
+def load_to_kafka():
 
     while True:
 
@@ -121,6 +121,6 @@ def main():
         time.sleep(5)
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    main()
+#     main()

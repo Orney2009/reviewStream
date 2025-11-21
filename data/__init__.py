@@ -3,3 +3,4 @@ this package give access to all data used in the project (like the database conn
 """
 
 from .db import db
+from .kafka import load_to_kafka

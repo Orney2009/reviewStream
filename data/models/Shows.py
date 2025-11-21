@@ -7,5 +7,5 @@ from ..db.base import Base
 
 class Shows(Base):
     __tablename__ = "shows"
-    show_id = Column(String, primary_key=True, index=True)
+    show_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String)
