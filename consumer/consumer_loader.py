@@ -1,7 +1,9 @@
 from kafka import KafkaConsumer
+from data import db
 import os
 import json
 
+db = db()
 
 def consumer_loader_data(topic_name):
 
@@ -15,6 +17,7 @@ def consumer_loader_data(topic_name):
 
     for element in consumer_loader:
         print(element.value)
+        db.load_to_db(element.value)
 
 
 

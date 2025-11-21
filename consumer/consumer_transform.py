@@ -119,6 +119,7 @@ def consumer_realtime_to_file(model):
                 
                 all_comments.append(label_send)
                 
+                print(f"comment detected and labelized with success in topic {message.topic}")
                 # print(f"\nLabellisé et écrit: Topic='{message.topic}', comment={text_to_process}, Label='{label}' \n")
                 send_comments_label('new_label_topic', label_send)
 
