@@ -24,3 +24,5 @@ vector_file_path = os.getenv("VECTOR_PICKLE_FILE_PATH")
 
 # stopwords file path
 stopwords_file_path = os.getenv("STOPWORDS_FILE_PATH")
+
+topic_name = os.getenv('TOPIC_LOADER_NAME')
