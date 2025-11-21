@@ -13,8 +13,8 @@ import numpy as np
 class Model:
     
     def __init__(self):
-        pkfile = open('data/models/model.pkl', 'rb')
-        vecfile = open('data/models/vectorized.pkl', 'rb')
+        pkfile = open('/home/kristen/Rendu/DATA/ML_Pool/C-DAT-300-COT-2-1-endtoendml-5/data/models/model.pkl', 'rb')
+        vecfile = open('/home/kristen/Rendu/DATA/ML_Pool/C-DAT-300-COT-2-1-endtoendml-5/data/models/vectorized.pkl', 'rb')
         self.model = pickle.load(pkfile)
         self.vector = pickle.load(vecfile)
 
@@ -41,7 +41,7 @@ class Model:
         return new_dataset
 
     def stopwords_remover(self, dataset):    
-        with open("data/stopwords.txt") as file:
+        with open("/home/kristen/Rendu/DATA/ML_Pool/C-DAT-300-COT-2-1-endtoendml-5/data/stopwords.txt") as file:
             custom_stopwords = file.read().split(",")
             
         stop_words = set(stopwords.words('english') + custom_stopwords + ["footnote", "sidenote", "project", "gutenberg"])
