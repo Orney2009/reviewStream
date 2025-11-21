@@ -95,17 +95,17 @@ def consumer_realtime_to_file(model):
                 
                 append_to_json_file(labeled_record)
                 
-                label_send = {
-                    "original_topic": message.topic,
-                    "comment": text_to_process,
-                    "timestamp": timestamp,
-                    "label": int(label)
-                }
+                # label_send = {
+                #     "original_topic": message.topic,
+                #     "comment": text_to_process,
+                #     "timestamp": timestamp,
+                #     "label": int(label)
+                # }
                 
                 
                 print(f"Labellisé et écrit: Topic='{message.topic}', comment={text_to_process}, Label='{label}'")
 
-                return label_send
+                # return label_send
     except KeyboardInterrupt:
         print("Stopped by the user.")
     finally:
